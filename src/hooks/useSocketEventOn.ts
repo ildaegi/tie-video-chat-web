@@ -9,6 +9,7 @@ type SocketEvent = {
   // answer: { data: RTCSessionDescription };
   // offer: { data: RTCSessionDescription };
   // leave: null;
+  get_rooms: Record<string, { id: string; email: string }[]>;
   user_exit: { id: string };
   getCandidate: {
     candidate: RTCIceCandidateInit;

@@ -1,9 +1,16 @@
 import "./App.css";
-import MainPage from "./page/MainPage";
-import MeetingPage from "./page/MeetingPage";
+import { Routes, Route } from "react-router-dom";
 
-function App() {
-  return <MeetingPage />;
+import MainPage from "./routes/main";
+import MeetingPage from "./routes/meeting";
+import MeetingListPage from "./routes/meetingList";
+
+export default function App() {
+  return (
+    <Routes>
+      <Route path="meeting/:id/:email" element={<MeetingPage />} />
+      <Route path="meeting" element={<MeetingListPage />} />
+      <Route path="*" element={<MainPage />} />
+    </Routes>
+  );
 }
-
-export default App;

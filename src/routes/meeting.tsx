@@ -1,23 +1,29 @@
-import React, { useState, useRef, useEffect, useCallback } from "react";
+import React, {
+  useState,
+  useRef,
+  useEffect,
+  useCallback,
+  useMemo,
+} from "react";
+import { useParams } from "react-router-dom";
+import Video from "../components/common/Video";
+import { RTC_PEER_CONNECTION_CONFIG } from "../constants/webRTC";
 import useSocket from "../hooks/useSocket";
 import useSocketEventOn from "../hooks/useSocketEventOn";
+
+import { MeetingUser } from "../types/domain/user";
+
 import Socket from "../utils/socket";
 
-export type WebRTCUser = {
-  id: string;
-  email: string;
-  stream: MediaStream;
-};
+export default function MeetingPage() {
+  const params = useParams();
+  const roomId = useMemo(() => params.id, [params]);
+  const email = useMemo(() => params.email, [params]);
 
-const pc_config = {
-  iceServers: [{ urls: "stun:stun.l.google.com:19302" }],
-};
-
-const App = () => {
   const pcsRef = useRef<{ [socketId: string]: RTCPeerConnection }>({});
   const localVideoRef = useRef<HTMLVideoElement>(null);
   const localStreamRef = useRef<MediaStream>();
-  const [users, setUsers] = useState<WebRTCUser[]>([]);
+  const [users, setUsers] = useState<MeetingUser[]>([]);
 
   useSocket();
 
@@ -34,8 +40,8 @@ const App = () => {
       if (localVideoRef.current) localVideoRef.current.srcObject = localStream;
 
       Socket.instance?.emit("join_room", {
-        room: "1234",
-        email: "sample@naver.com",
+        room: roomId,
+        email: email,
       });
     } catch (e) {
       console.log(`getUserMedia error: ${e}`);
@@ -49,7 +55,7 @@ const App = () => {
         email,
       });
       try {
-        const pc = new RTCPeerConnection(pc_config);
+        const pc = new RTCPeerConnection(RTC_PEER_CONNECTION_CONFIG);
 
         pc.onicecandidate = (e) => {
           if (!e.candidate) return;
@@ -112,6 +118,7 @@ const App = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [createPeerConnection, getLocalStream]);
 
+  // all_users
   useSocketEventOn(
     "all_users",
     (allUsers: Array<{ id: string; email: string }>) => {
@@ -132,7 +139,7 @@ const App = () => {
           Socket.instance?.emit("offer", {
             sdp: localSdp,
             offerSendID: Socket.instance.id,
-            offerSendEmail: "offerSendSample@sample.com",
+            offerSendEmail: email,
             offerReceiveID: user.id,
           });
         } catch (e) {
@@ -142,6 +149,7 @@ const App = () => {
     }
   );
 
+  // getOffer
   useSocketEventOn(
     "getOffer",
     async (data: {
@@ -174,6 +182,7 @@ const App = () => {
     }
   );
 
+  // getAnswer
   useSocketEventOn(
     "getAnswer",
     (data: { sdp: RTCSessionDescription; answerSendID: string }) => {
@@ -185,6 +194,7 @@ const App = () => {
     }
   );
 
+  // getCandidate
   useSocketEventOn(
     "getCandidate",
     async (data: {
@@ -199,6 +209,7 @@ const App = () => {
     }
   );
 
+  // user_exit
   useSocketEventOn("user_exit", (data: { id: string }) => {
     if (!pcsRef.current[data.id]) return;
     pcsRef.current[data.id].close();
@@ -209,12 +220,7 @@ const App = () => {
   return (
     <div>
       <video
-        style={{
-          width: 240,
-          height: 240,
-          margin: 5,
-          backgroundColor: "black",
-        }}
+        style={{ width: 240, height: 240, margin: 5, backgroundColor: "black" }}
         muted
         ref={localVideoRef}
         autoPlay
@@ -224,53 +230,4 @@ const App = () => {
       ))}
     </div>
   );
-};
-
-export default App;
-
-const Video = ({
-  email,
-  stream,
-  muted,
-}: {
-  email: string;
-  stream: MediaStream;
-  muted?: boolean;
-}) => {
-  const ref = useRef<HTMLVideoElement>(null);
-  const [isMuted, setIsMuted] = useState<boolean>(false);
-
-  useEffect(() => {
-    if (ref.current) ref.current.srcObject = stream;
-    if (muted) setIsMuted(muted);
-  }, [stream, muted]);
-
-  return (
-    <div
-      style={{
-        position: "relative",
-        display: "inline-block",
-        width: "240px",
-        height: "270px",
-        margin: "5px",
-      }}
-    >
-      <video
-        style={{ width: "240px", height: "240px", backgroundColor: "black" }}
-        ref={ref}
-        muted={isMuted}
-        autoPlay
-      />
-      <p
-        style={{
-          display: "inline-block",
-          position: "absolute",
-          top: "230px",
-          left: "0px",
-        }}
-      >
-        {email}
-      </p>
-    </div>
-  );
-};
+}

@@ -45,8 +45,8 @@ jobs:
           ref: "master"
           path: "./master"
 
-      - name: E) Move build to deploy
-        run: mv ./master/history ./build
+      # - name: E) Move build to deploy
+      #   run: mv ./master/history ./build
 
       - name: F) Deploy
         uses: peaceiris/actions-gh-pages@v3

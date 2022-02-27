@@ -29,20 +29,19 @@ export default function MeetingPage() {
 
   const getLocalStream = useCallback(async () => {
     try {
-      const localStream = await navigator.mediaDevices.getUserMedia({
-        audio: true,
-        video: {
-          width: 240,
-          height: 240,
-        },
-      });
+      const localStream =
+        email !== "ghost-for-recode"
+          ? await navigator.mediaDevices.getUserMedia({
+              audio: { suppressLocalAudioPlayback: true },
+              video: {
+                width: 240,
+                height: 240,
+              },
+            })
+          : new MediaStream();
       localStreamRef.current = localStream;
       if (localVideoRef.current) localVideoRef.current.srcObject = localStream;
-
-      Socket.instance?.emit("join_room", {
-        room: roomId,
-        email: email,
-      });
+      Socket.emit("joinRoom", { room: roomId, email: email });
     } catch (e) {
       console.log(`getUserMedia error: ${e}`);
     }
@@ -60,9 +59,9 @@ export default function MeetingPage() {
         pc.onicecandidate = (e) => {
           if (!e.candidate) return;
           console.log("onicecandidate");
-          Socket.instance?.emit("candidate", {
+          Socket.emit("candidate", {
             candidate: e.candidate,
-            candidateSendID: Socket.instance.id,
+            candidateSendID: Socket.instance?.id,
             candidateReceiveID: socketID,
           });
         };
@@ -120,10 +119,11 @@ export default function MeetingPage() {
 
   // all_users
   useSocketEventOn(
-    "all_users",
+    "allUsers",
     (allUsers: Array<{ id: string; email: string }>) => {
+      console.log("allUsers get !");
       allUsers.forEach(async (user) => {
-        if (!localStreamRef.current) return;
+        // if (!localStreamRef.current) return;
         const pc = createPeerConnection(user.id, user.email);
         if (!pc) return;
 
@@ -136,9 +136,10 @@ export default function MeetingPage() {
           });
           console.log("create offer success");
           await pc.setLocalDescription(new RTCSessionDescription(localSdp));
-          Socket.instance?.emit("offer", {
+
+          Socket.emit("offer", {
             sdp: localSdp,
-            offerSendID: Socket.instance.id,
+            offerSendID: Socket.instance?.id,
             offerSendEmail: email,
             offerReceiveID: user.id,
           });
@@ -159,7 +160,7 @@ export default function MeetingPage() {
     }) => {
       const { sdp, offerSendID, offerSendEmail } = data;
       console.log("get offer");
-      if (!localStreamRef.current) return;
+      // if (!localStreamRef.current) return;
       const pc = createPeerConnection(offerSendID, offerSendEmail);
       if (!pc) return;
       pcsRef.current = { ...pcsRef.current, [offerSendID]: pc };
@@ -171,9 +172,9 @@ export default function MeetingPage() {
           offerToReceiveAudio: true,
         });
         await pc.setLocalDescription(new RTCSessionDescription(localSdp));
-        Socket.instance?.emit("answer", {
+        Socket.emit("answer", {
           sdp: localSdp,
-          answerSendID: Socket.instance.id,
+          answerSendID: Socket.instance?.id,
           answerReceiveID: offerSendID,
         });
       } catch (e) {
@@ -210,12 +211,18 @@ export default function MeetingPage() {
   );
 
   // user_exit
-  useSocketEventOn("user_exit", (data: { id: string }) => {
+  useSocketEventOn("userExit", (data: { id: string }) => {
     if (!pcsRef.current[data.id]) return;
     pcsRef.current[data.id].close();
     delete pcsRef.current[data.id];
     setUsers((oldUsers) => oldUsers.filter((user) => user.id !== data.id));
   });
+
+  const recordStart = () => {
+    Socket.emit("startRecording", {
+      roomID: roomId,
+    });
+  };
 
   return (
     <div>
@@ -225,6 +232,7 @@ export default function MeetingPage() {
         ref={localVideoRef}
         autoPlay
       />
+      <button onClick={recordStart}>녹화 시작!</button>
       {users.map((user, index) => (
         <Video key={index} email={user.email} stream={user.stream} />
       ))}

@@ -16,10 +16,16 @@ export default function MeetingListPage() {
 
   useSocket();
 
-  useSocketEventOn("get_rooms", (room) => {
+  useSocketEventOn("getRooms", (room) => {
     console.log({ room });
     setRooms(Object.entries(room).map(([title, users]) => ({ title, users })));
   });
+
+  useEffect(() => {
+    Socket.emit("getRooms", {});
+    const close = setInterval(() => Socket.emit("getRooms", {}), 1000);
+    return () => clearInterval(close);
+  }, []);
 
   return (
     <div className="App">

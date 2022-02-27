@@ -1,28 +1,7 @@
 import { useEffect } from "react";
+import { SocketEvent } from "../types/socket/event.socket";
 
 import Socket from "../utils/socket";
-
-type SocketEvent = {
-  test: { data: string };
-  // iceCandidate: { data: RTCIceCandidateType };
-  // iceCandidateEnd: null;
-  // answer: { data: RTCSessionDescription };
-  // offer: { data: RTCSessionDescription };
-  // leave: null;
-  get_rooms: Record<string, { id: string; email: string }[]>;
-  user_exit: { id: string };
-  getCandidate: {
-    candidate: RTCIceCandidateInit;
-    candidateSendID: string;
-  };
-  getAnswer: { sdp: RTCSessionDescription; answerSendID: string };
-  getOffer: {
-    sdp: RTCSessionDescription;
-    offerSendID: string;
-    offerSendEmail: string;
-  };
-  all_users: Array<{ id: string; email: string }>;
-};
 
 export default function useSocketEventOn<E extends keyof SocketEvent>(
   event: E,

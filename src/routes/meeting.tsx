@@ -45,6 +45,7 @@ export default function MeetingPage() {
     } catch (e) {
       console.log(`getUserMedia error: ${e}`);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const createPeerConnection = useCallback(

@@ -14,5 +14,7 @@ export default function useSocketEventOn<E extends keyof SocketEvent>(
     return () => {
       Socket.instance?.off<keyof SocketEvent>(event, cb);
     };
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 }

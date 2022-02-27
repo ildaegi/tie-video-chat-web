@@ -1,5 +1,4 @@
 import logo from "../logo.svg";
-import { useNavigate } from "react-router-dom";
 import useSocket from "../hooks/useSocket";
 import { useEffect, useState } from "react";
 import Socket from "../utils/socket";
@@ -11,7 +10,6 @@ interface Room {
 }
 
 export default function MeetingListPage() {
-  const navigate = useNavigate();
   const [rooms, setRooms] = useState<Room[]>([]);
 
   useSocket();

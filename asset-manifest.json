@@ -1,16 +1,17 @@
 {
   "files": {
-    "main.css": "/static/css/main.5f147416.css",
-    "main.js": "/static/js/main.b9972f35.js",
-    "static/js/787.3a83f9a8.chunk.js": "/static/js/787.3a83f9a8.chunk.js",
-    "static/media/logo.svg": "/static/media/logo.c3a0d54abe10f1276847d2d0fcbddf3d.svg",
-    "index.html": "/index.html",
-    "main.5f147416.css.map": "/static/css/main.5f147416.css.map",
-    "main.b9972f35.js.map": "/static/js/main.b9972f35.js.map",
-    "787.3a83f9a8.chunk.js.map": "/static/js/787.3a83f9a8.chunk.js.map"
+    "main.css": "/tie-video-chat-web/static/css/main.9d2c4429.css",
+    "main.js": "/tie-video-chat-web/static/js/main.1c5a2c2b.js",
+    "static/js/787.3a83f9a8.chunk.js": "/tie-video-chat-web/static/js/787.3a83f9a8.chunk.js",
+    "static/media/noiseBackground.png": "/tie-video-chat-web/static/media/noiseBackground.e0cc6fb1a608681cb53e.png",
+    "static/media/logo.svg": "/tie-video-chat-web/static/media/logo.c3a0d54abe10f1276847d2d0fcbddf3d.svg",
+    "index.html": "/tie-video-chat-web/index.html",
+    "main.9d2c4429.css.map": "/tie-video-chat-web/static/css/main.9d2c4429.css.map",
+    "main.1c5a2c2b.js.map": "/tie-video-chat-web/static/js/main.1c5a2c2b.js.map",
+    "787.3a83f9a8.chunk.js.map": "/tie-video-chat-web/static/js/787.3a83f9a8.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.5f147416.css",
-    "static/js/main.b9972f35.js"
+    "static/css/main.9d2c4429.css",
+    "static/js/main.1c5a2c2b.js"
   ]
 }

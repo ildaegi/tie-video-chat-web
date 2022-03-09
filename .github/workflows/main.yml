@@ -32,18 +32,17 @@ jobs:
         run: npm run build
         env:
           NODE_ENV: production
-          REACT_APP_API_URL: ${{ secrets.REACT_APP_API_URL }}
 
-      - name: C) Setup assets
-        run: |
-          mkdir ./master
-          mkdir -p ./build/history
+      # - name: C) Setup assets
+      #   run: |
+      #     mkdir ./master
+      #     mkdir -p ./build/history
 
-      - name: D) checkout Master
-        uses: actions/checkout@v2
-        with:
-          ref: "master"
-          path: "./master"
+      # - name: D) checkout Master
+      #   uses: actions/checkout@v2
+      #   with:
+      #     ref: "master"
+      #     path: "./master"
 
       # - name: E) Move build to deploy
       #   run: mv ./master/history ./build

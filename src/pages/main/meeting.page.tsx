@@ -6,14 +6,14 @@ import React, {
   useMemo,
 } from "react";
 import { useParams } from "react-router-dom";
-import Video from "../components/common/Video";
-import { RTC_PEER_CONNECTION_CONFIG } from "../constants/webRTC";
-import useSocket from "../hooks/useSocket";
-import useSocketEventOn from "../hooks/useSocketEventOn";
+import Video from "../../components/common/Video";
+import { RTC_PEER_CONNECTION_CONFIG } from "../../constants/webRTC";
+import useSocket from "../../hooks/useSocket";
+import useSocketEventOn from "../../hooks/useSocketEventOn";
 
-import { MeetingUser } from "../types/domain/user";
+import { MeetingUser } from "../../types/domain/user";
 
-import Socket from "../utils/socket";
+import Socket from "../../utils/socket";
 
 export default function MeetingPage() {
   const params = useParams();

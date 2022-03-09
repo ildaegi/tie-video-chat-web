@@ -4,6 +4,7 @@ import io, { Socket as SocketType } from "socket.io-client";
 const url = "https://tie-video-chat-app.herokuapp.com";
 // const url = "http://localhost:5556";
 
+// web token 만들기
 const token =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imluc3VuZzk1NDZAZ21haWwuY29tIiwiaWF0IjoxNjQzNTE0MDM0LCJleHAiOjMzMjAxMTE0MDM0fQ.o_E2n67N7csOeKrjB-PLIAowZXOwfJ4Sk1zrGKs0DJU";
 export default class Socket {
@@ -18,8 +19,11 @@ export default class Socket {
     });
   };
 
-  static emit = (event: string, data: any) =>
+  static emit = async (event: string, data: any) => {
+    
+    // await As
     this.instance?.emit(event, { ...data, token });
+  };
 
   static disconnect = () => Socket.instance?.close();
 }

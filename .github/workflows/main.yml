@@ -27,11 +27,10 @@ jobs:
 
       # - name: A) Setting homepage in package.json
       #   run: sed -i 's/#homepage/https:\/\/outsung.github.io\/Duo-frontend\//g' package.json
-
       - name: B) Build
         run: npm run build
-        env:
-          NODE_ENV: production
+        # env:
+        #   NODE_ENV: production
 
       # - name: C) Setup assets
       #   run: |
